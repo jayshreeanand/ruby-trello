@@ -50,6 +50,23 @@ module Trello
       MultiAssociation.new(self, members).proxy
     end
 
+    # Invite member to this organization
+    # type => [ :admin, :normal, :observer ]
+    def invite_member(email, full_name, type = :normal)
+      client.put("/organizations/#{self.id}/members", { email: email, full_name: full_name, type: type })
+    end
+
+    # Add a member to this organization.
+    # type => [ :admin, :normal, :observer ]
+    def add_member(member, type = :normal)
+      client.put("/organizations/#{self.id}/members/#{member.id}", { type: type })
+    end
+
+    # Remove a member of this organization.
+    def remove_member(member)
+      client.delete("/organizations/#{self.id}/members/#{member.id}")
+    end
+
     # :nodoc:
     def request_prefix
       "/organizations/#{id}"
